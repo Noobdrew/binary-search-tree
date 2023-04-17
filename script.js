@@ -25,13 +25,7 @@ class Tree {
         this.array = this.mergeSort(array)
         this.root = this.buildTree()
     }
-    setStart() {
-        this.array
-    }
-    setEnd() {
-        let endValue = this.array.length - 1
-        return endValue
-    }
+
     buildTree(arr = this.array, start = 0, end = this.array.length - 1) {
         if (start > end) {
             return null
@@ -71,12 +65,41 @@ class Tree {
         }
         return merge(left, right)
     }
+    find(key, base = this.root) {
+        if (base == null || base.data == key) return base
+
+        if (base.data < key) {
+            return this.find(key, base.right)
+        } else {
+            return this.find(key, base.left)
+        }
+    }
+    insert(key, base = this.root) {
+        if (base.data == key) return base
+
+        if (base.data < key) {
+            if (base.right == null) {
+                let newNode = new Node(key)
+                base.right = newNode
+            }
+            return this.insert(key, base.right)
+        } else {
+            if (base.left == null) {
+                let newNode = new Node(key)
+                base.left = newNode
+            }
+            return this.insert(key, base.left)
+        }
+    }
 
 }
 
-let test = [1, 3, 3, 3, 4, 5, 2]
+let test = [1, 2, 3, 4, 5]
 
 let tree1 = new Tree(test)
-console.log(tree1.root)
+
+prettyPrint(tree1.root)
+tree1.insert(8)
+
 prettyPrint(tree1.root)
 
