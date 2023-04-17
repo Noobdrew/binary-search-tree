@@ -91,15 +91,49 @@ class Tree {
             return this.insert(key, base.left)
         }
     }
-
+    delete(key, base = this.root) {
+        /* Base Case: If the tree is empty */
+        if (base == null)
+            return base;
+        /* Otherwise, recur down the tree */
+        if (key < base.data)
+            base.left = this.delete(key, base.left);
+        else if (key > base.data)
+            base.right = this.delete(key, base.right);
+        // if key is same as root's
+        // key, then This is the
+        // node to be deleted
+        else {
+            // node with only one child or no child
+            if (base.left == null)
+                return base.right;
+            else if (base.right == null)
+                return base.left;
+            // node with two children: Get the inorder
+            // successor (smallest in the right subtree)
+            base.data = minValue(base.right);
+            // Delete the inorder successor
+            base.right = this.delete(base.data, base.right);
+        }
+        return base;
+        function minValue(root) {
+            let minv = root.data;
+            while (root.left != null) {
+                minv = root.left.data;
+                root = root.left;
+            }
+            return minv;
+        }
+    }
 }
 
-let test = [1, 2, 3, 4, 5]
+let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 762]
 
 let tree1 = new Tree(test)
 
 prettyPrint(tree1.root)
 tree1.insert(8)
+tree1.insert(4.4)
+tree1.delete(90)
 
-prettyPrint(tree1.root)
 
