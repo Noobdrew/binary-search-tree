@@ -22,17 +22,17 @@ class Node {
 
 class Tree {
     constructor(array) {
-        this.array = array
+        this.array = mergeSort(array)
         this.root = this.buildTree()
     }
     setStart() {
         this.array
     }
     setEnd() {
-        let endValue=this.array.length-1
-       return endValue
+        let endValue = this.array.length - 1
+        return endValue
     }
-    buildTree(arr=this.array, start=0, end= this.array.length-1) {
+    buildTree(arr = this.array, start = 0, end = this.array.length - 1) {
         if (start > end) {
             return null
         }
@@ -42,13 +42,39 @@ class Tree {
 
         node.left = this.buildTree(arr, start, mid - 1)
         node.right = this.buildTree(arr, mid + 1, end)
-        
+
         return node
+    }
+    mergeSort(arr=this.array) {
+        // Base case
+        if (arr.length <= 1) return arr
+        let mid = Math.floor(arr.length / 2)
+        // Recursive calls
+        let left = mergeSort(arr.slice(0, mid))
+        let right = mergeSort(arr.slice(mid))
+    
+        function merge(left, right) {
+            let sortedArr = [] // the sorted items will go here
+            while (left.length && right.length) {
+                // Insert the smallest item into sortedArr
+                if (left[0] == right[0]) {
+                    right.shift()
+                }
+                else if (left[0] < right[0]) {
+                    sortedArr.push(left.shift())
+                } else {
+                    sortedArr.push(right.shift())
+                }
+            }
+            // Use spread operators to create a new array, combining the three arrays
+            return [...sortedArr, ...left, ...right]
+        }
+        return merge(left, right)
     }
 
 }
 
-let test = [1, 2, 3, 4, 5]
+let test = [1,3,3,3,4,5,2]
 
 let tree1 = new Tree(test)
 console.log(tree1.root)
@@ -57,3 +83,32 @@ prettyPrint(tree1.root)
 
 
 
+
+function mergeSort(arr) {
+    // Base case
+    if (arr.length <= 1) return arr
+    let mid = Math.floor(arr.length / 2)
+    // Recursive calls
+    let left = mergeSort(arr.slice(0, mid))
+    let right = mergeSort(arr.slice(mid))
+
+    function merge(left, right) {
+        let sortedArr = [] // the sorted items will go here
+        while (left.length && right.length) {
+            // Insert the smallest item into sortedArr
+            if (left[0] == right[0]) {
+                right.shift()
+            }
+            else if (left[0] < right[0]) {
+                sortedArr.push(left.shift())
+            } else {
+                sortedArr.push(right.shift())
+            }
+        }
+        // Use spread operators to create a new array, combining the three arrays
+        return [...sortedArr, ...left, ...right]
+    }
+    return merge(left, right)
+}
+
+console.log(mergeSort([1,3,3,3,4,5,2]))
