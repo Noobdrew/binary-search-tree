@@ -11,7 +11,32 @@ const prettyPrint = (node, prefix = '', isLeft = true) => {
         prettyPrint(node.left, `${prefix}${isLeft ? '    ' : '│   '}`, true);
     }
 }
-
+class Queue {
+    constructor() {
+        this.elements = {};
+        this.head = 0;
+        this.tail = 0;
+    }
+    enqueue(element) {
+        this.elements[this.tail] = element;
+        this.tail++;
+    }
+    dequeue() {
+        const item = this.elements[this.head];
+        delete this.elements[this.head];
+        this.head++;
+        return item;
+    }
+    peek() {
+        return this.elements[this.head];
+    }
+    get length() {
+        return this.tail - this.head;
+    }
+    get isEmpty() {
+        return this.length === 0;
+    }
+}
 class Node {
     constructor(data) {
         this.data = data
@@ -50,7 +75,7 @@ class Tree {
         function merge(left, right) {
             let sortedArr = [] // the sorted items will go here
             while (left.length && right.length) {
-                // Insert the smallest item into sortedArr
+                // remove duplicates
                 if (left[0] == right[0]) {
                     right.shift()
                 }
@@ -125,6 +150,66 @@ class Tree {
             return minv;
         }
     }
+    levelOrder(func) {
+        if (this.root == null) return
+        let que = []
+        let result = []
+        que.push(this.root)
+        while (que.length >= 1) {
+            let current = que[0]
+
+            result.push(current)
+            try {
+                func(current)
+                if (current.left != null) que.push(current.left)
+                if (current.right != null) que.push(current.right)
+                que.shift()
+            }
+            catch {
+                if (current.left != null) que.push(current.left)
+                if (current.right != null) que.push(current.right)
+                que.shift()
+            }
+        }
+        console.log(result)
+    }
+    preorder(func, base = this.root) {
+        if (base == null) return
+        console.log(base)
+        this.preorder(func, base.left)
+        this.preorder(func, base.right)
+    }
+    inorder(func, base = this.root) {
+        if (base == null) return
+        this.inorder(func, base.left)
+        console.log(base)
+        this.inorder(func, base.right)
+
+        try {
+            func(base)
+        }
+        catch {
+           
+        }
+
+    }
+    postorder(func, base = this.root) {
+        let arr = []
+        if (base == null ) return 
+     
+        arr.push(this.postorder(func, base.left))
+        arr.push(this.postorder(func, base.right))
+        console.log(base)
+     
+        try {
+            func(base)
+        }
+        catch {
+            return arr
+        }
+        
+        
+    }
 }
 
 let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 762]
@@ -132,8 +217,5 @@ let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 7
 let tree1 = new Tree(test)
 
 prettyPrint(tree1.root)
-tree1.insert(8)
-tree1.insert(4.4)
-tree1.delete(90)
 
-
+tree1.levelOrder()
