@@ -174,48 +174,67 @@ class Tree {
         console.log(result)
     }
     preorder(func, base = this.root) {
-        if (base == null) return
-        console.log(base)
-        this.preorder(func, base.left)
-        this.preorder(func, base.right)
+        if (base == null) return [];
+        let result = [];
+        result.push(base);
+        if (base.left) {
+            result = result.concat(this.preorder(func, base.left));
+        }
+        if (base.right) {
+            result = result.concat(this.preorder(func, base.right));
+        }
+        try {
+            func(base)
+        }
+        catch {
+            return result;
+        }
     }
     inorder(func, base = this.root) {
-        if (base == null) return
-        this.inorder(func, base.left)
-        console.log(base)
-        this.inorder(func, base.right)
-
+        if (base == null) return [];
+        let result = [];
+        if (base.left) {
+            result = result.concat(this.inorder(func, base.left));
+        }
+        result.push(base);
+        if (base.right) {
+            result = result.concat(this.inorder(func, base.right));
+        }
         try {
             func(base)
         }
         catch {
-           
+            return result;
         }
-
     }
+
+
     postorder(func, base = this.root) {
-        let arr = []
-        if (base == null ) return 
-     
-        arr.push(this.postorder(func, base.left))
-        arr.push(this.postorder(func, base.right))
-        console.log(base)
-     
+        if (base == null) return [];
+        let result = [];
+        if (base.left) {
+            result = result.concat(this.postorder(func, base.left));
+        }
+        if (base.right) {
+            result = result.concat(this.postorder(func, base.right));
+        }
+        result.push(base);
         try {
             func(base)
         }
         catch {
-            return arr
+            return result;
         }
-        
-        
     }
 }
-
 let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 762]
 
 let tree1 = new Tree(test)
 
 prettyPrint(tree1.root)
 
-tree1.levelOrder()
+//tree1.levelOrder()
+
+console.log(tree1.inorder());
+console.log(tree1.preorder());
+console.log(tree1.postorder());
