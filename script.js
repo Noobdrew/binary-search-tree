@@ -43,6 +43,25 @@ class Node {
         this.left = null
         this.right = null
     }
+    depth() {
+        let count = 0;
+        let current = this;
+        while (current.parent != null) {
+            count += 1;
+            current = current.parent;
+        }
+        return count;
+    }
+    height() {
+        // Base case: the height of a null node is 0
+        if (this == null) {
+            return 0;
+        }
+        // Recursive case: the height is 1 + the maximum height of the left and right subtrees
+        let leftHeight = this.left ? this.left.height() : 0;
+        let rightHeight = this.right ? this.right.height() : 0;
+        return 1 + Math.max(leftHeight, rightHeight);
+    }
 }
 
 class Tree {
@@ -51,18 +70,19 @@ class Tree {
         this.root = this.buildTree()
     }
 
-    buildTree(arr = this.array, start = 0, end = this.array.length - 1) {
+    buildTree(arr = this.array, start = 0, end = this.array.length - 1, parent = null) {
         if (start > end) {
-            return null
+            return null;
         }
 
         let mid = parseInt((start + end) / 2);
-        let node = new Node(arr[mid])
+        let node = new Node(arr[mid]);
+        node.parent = parent;
 
-        node.left = this.buildTree(arr, start, mid - 1)
-        node.right = this.buildTree(arr, mid + 1, end)
+        node.left = this.buildTree(arr, start, mid - 1, node);
+        node.right = this.buildTree(arr, mid + 1, end, node);
 
-        return node
+        return node;
     }
     mergeSort(arr = this.array) {
         // Base case
@@ -154,6 +174,7 @@ class Tree {
         if (this.root == null) return
         let que = []
         let result = []
+
         que.push(this.root)
         while (que.length >= 1) {
             let current = que[0]
@@ -170,6 +191,7 @@ class Tree {
                 if (current.right != null) que.push(current.right)
                 que.shift()
             }
+
         }
         console.log(result)
     }
@@ -226,6 +248,7 @@ class Tree {
             return result;
         }
     }
+
 }
 let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 762]
 
@@ -233,8 +256,11 @@ let tree1 = new Tree(test)
 
 prettyPrint(tree1.root)
 
-//tree1.levelOrder()
+let node = tree1.find(6)
 
-console.log(tree1.inorder());
-console.log(tree1.preorder());
-console.log(tree1.postorder());
+let depth = node.depth()
+let height = node.height()
+
+console.log(node)
+console.log(depth)
+console.log(height)
