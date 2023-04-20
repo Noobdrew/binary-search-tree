@@ -223,19 +223,53 @@ class Tree {
             return result;
         }
     }
+    isBalanced(node = this.root) {
+        if (!node) {
+          return true;
+        }
+    
+        const leftHeight = node.left ? node.left.height() : 0;
+        const rightHeight = node.right ? node.right.height() : 0;
+    
+        if (Math.abs(leftHeight - rightHeight) > 1) {
+          return false;
+        }
+    
+        return this.isBalanced(node.left) && this.isBalanced(node.right);
+      }
+      rebalance() {
+        // If the tree is already balanced, return early.
+        if (this.isBalanced()) {
+          return;
+        }
+        
+        // Get a sorted array of the tree nodes using inorder traversal.
+        let nodes = [];
+        function inorder(node) {
+          if (node) {
+            inorder(node.left);
+            nodes.push(node.data);
+            inorder(node.right);
+          }
+        }
+        inorder(this.root);
+        
+        // Build a new balanced tree from the sorted array.
+        this.array = nodes;
+        this.root = this.buildTree();
+      }
+    }
 
-}
 let test = [1, 5, 6, 7, 1, 3, 6, 8, 3, 5, 6, 7, 90, 1, 3, 7, 15, 6, 4, 346, 1, 762]
 
 let tree1 = new Tree(test)
 
+tree1.insert(100)
+tree1.insert(101)
+tree1.insert(102)
 prettyPrint(tree1.root)
 
-let node = tree1.find(6)
 
-let depth = node.depth()
-let height = node.height()
 
-console.log(node)
-console.log(depth)
-console.log(height)
+console.log(tree1.isBalanced())
+console.log(tree1.inorder())
